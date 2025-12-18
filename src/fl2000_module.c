@@ -249,7 +249,7 @@ fl2000_module_free(struct kref *kref)
 	kfree(dev_ctx);
 }
 
-int __init
+static int __init
 fl2000_module_init(void)
 {
 	int result;
@@ -258,7 +258,7 @@ fl2000_module_init(void)
 	return result;
 }
 
-void __exit
+static void __exit
 fl2000_module_exit(void)
 {
 	usb_deregister(&fl2000_driver);
