@@ -11,7 +11,7 @@
 // P R I V A T E
 /////////////////////////////////////////////////////////////////////////////////
 //
-long
+static long
 fl2000_ioctl_wait_monitor_event(struct dev_ctx * dev_ctx, unsigned long arg)
 {
 	struct monitor_info monitor_info;
@@ -48,7 +48,7 @@ fl2000_ioctl_wait_monitor_event(struct dev_ctx * dev_ctx, unsigned long arg)
 	return wait_status;
 }
 
-long
+static long
 fl2000_ioctl_query_monitor_event(struct dev_ctx * dev_ctx, unsigned long arg)
 {
 	struct monitor_info monitor_info;
@@ -74,7 +74,7 @@ fl2000_ioctl_query_monitor_event(struct dev_ctx * dev_ctx, unsigned long arg)
 	return 0;
 }
 
-long
+static long
 fl2000_ioctl_set_display_mode(struct dev_ctx * dev_ctx, unsigned long arg)
 {
 	struct display_mode display_mode;
@@ -97,7 +97,7 @@ fl2000_ioctl_set_display_mode(struct dev_ctx * dev_ctx, unsigned long arg)
 	return ret;
 }
 
-long
+static long
 fl2000_ioctl_create_surface(struct dev_ctx * dev_ctx, unsigned long arg)
 {
 	struct surface_info info;
@@ -110,7 +110,7 @@ fl2000_ioctl_create_surface(struct dev_ctx * dev_ctx, unsigned long arg)
 	return fl2000_surface_create(dev_ctx, &info);
 }
 
-long
+static long
 fl2000_ioctl_destroy_surface(struct dev_ctx * dev_ctx, unsigned long arg)
 {
 	struct list_head * const list_head = &dev_ctx->render.surface_list;
@@ -157,7 +157,7 @@ fl2000_ioctl_destroy_surface(struct dev_ctx * dev_ctx, unsigned long arg)
 	return 0;
 }
 
-void
+static void
 pixel_swap(uint8_t * dst, uint8_t * src, uint32_t len)
 {
 	uint32_t *src_block;
@@ -174,7 +174,7 @@ pixel_swap(uint8_t * dst, uint8_t * src, uint32_t len)
 	}
 }
 
-long
+static long
 fl2000_ioctl_notify_surface_update(struct dev_ctx * dev_ctx, unsigned long arg)
 {
 	struct surface_update_info info;
@@ -394,7 +394,7 @@ exit:
 	return ret;
 }
 
-long
+static long
 fl2000_ioctl_lock_surface(struct dev_ctx * dev_ctx, unsigned long arg)
 {
 	struct surface_update_info info;
@@ -476,7 +476,7 @@ exit:
 	return ret;
 }
 
-long
+static long
 fl2000_ioctl_unlock_surface(struct dev_ctx * dev_ctx, unsigned long arg)
 {
 	struct surface_update_info info;

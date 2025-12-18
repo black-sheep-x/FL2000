@@ -41,7 +41,7 @@ GET_BYTES_PER_PIXEL(
     return (bytes_per_pixel);
 }
 
-uint32_t
+static uint32_t
 fl2000_comp_get_current_mask_value(struct dev_ctx * dev_ctx)
 {
 	uint32_t mask;
@@ -288,7 +288,7 @@ fl2000_comp_save_repeated_count(
 	dbg_msg(TRACE_LEVEL_VERBOSE, DBG_COMPRESSION, "<<<<");
 }
 
-void fl2000_comp_padding_alignment(
+static void fl2000_comp_padding_alignment(
 	struct dev_ctx * dev_ctx,
 	uint8_t * target,
 	size_t *data_buffer_length)
@@ -524,7 +524,7 @@ size_t fl2000_comp_gravity_low(
 	return (data_buffer_length);
 }
 
-size_t
+static size_t
 fl2000_comp_decompress_low(
 	struct dev_ctx * dev_ctx,
 	size_t CompressedBufferLength,

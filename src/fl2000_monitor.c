@@ -11,7 +11,7 @@
 // P R I V A T E
 /////////////////////////////////////////////////////////////////////////////////
 //
-void
+static void
 fl2000_monitor_filter_established_timing(struct dev_ctx * dev_ctx)
 {
 	// Check byte 35
@@ -77,7 +77,7 @@ exit:
 	return in_white_list;
 }
 
-void fl2000_monitor_ratio_to_dimension(
+static void fl2000_monitor_ratio_to_dimension(
 	uint8_t x,
 	uint8_t aspect_ratio,
 	uint32_t* width,
@@ -111,7 +111,7 @@ void fl2000_monitor_ratio_to_dimension(
 	*height = temp_height;
 }
 
-void fl2000_monitor_filter_std_timing(struct dev_ctx * dev_ctx)
+static void fl2000_monitor_filter_std_timing(struct dev_ctx * dev_ctx)
 {
 	uint8_t i;
 	uint32_t width;
@@ -153,7 +153,7 @@ void fl2000_monitor_filter_std_timing(struct dev_ctx * dev_ctx)
 	}
 }
 
-void fl2000_monitor_filter_detailed_timing(struct dev_ctx * dev_ctx)
+static void fl2000_monitor_filter_detailed_timing(struct dev_ctx * dev_ctx)
 {
 	uint32_t pixel_clock;
 	uint32_t h_active;
@@ -205,7 +205,7 @@ void fl2000_monitor_filter_detailed_timing(struct dev_ctx * dev_ctx)
 	}
 }
 
-bool fl2000_monitor_read_edid_dsub(struct dev_ctx * dev_ctx)
+static bool fl2000_monitor_read_edid_dsub(struct dev_ctx * dev_ctx)
 {
 	uint8_t index;
 	uint32_t data;
@@ -606,7 +606,7 @@ exit:
     dbg_msg(TRACE_LEVEL_VERBOSE, DBG_PNP, "<<<<");
 }
 
-void
+static void
 fl2000_monitor_plugin_handler(
 	struct dev_ctx * dev_ctx,
 	bool external_connected,
@@ -654,7 +654,7 @@ fl2000_monitor_plugin_handler(
 	dbg_msg(TRACE_LEVEL_VERBOSE, DBG_PNP, "<<<<");
 }
 
-void
+static void
 fl2000_monitor_plugout_handler(
 	struct dev_ctx * dev_ctx
 	)

@@ -15,7 +15,7 @@
 /*
  * push render_ctx to the bus, with dev_ctx->render.busy_list_lock held
  */
-int
+static int
 fl2000_render_with_busy_list_lock(
 	struct dev_ctx * dev_ctx,
 	struct render_ctx * render_ctx
@@ -118,7 +118,7 @@ exit:
  * bug#12414: on customer's platform, the in-flight URBs get stuck
  * for some reason. We try to kill in-flight URBs
  */
-void
+static void
 fl2000_kill_in_flight_render_ctx(
 	struct dev_ctx * dev_ctx
 	)
@@ -157,7 +157,7 @@ fl2000_kill_in_flight_render_ctx(
 		"all in-flight requests killed");
 }
 
-int
+static int
 fl2000_render_ctx_create(
 	struct dev_ctx * dev_ctx
 	)
@@ -200,7 +200,7 @@ exit:
     return ret_val;
 }
 
-void
+static void
 fl2000_render_ctx_destroy(
     struct dev_ctx * dev_ctx
     )

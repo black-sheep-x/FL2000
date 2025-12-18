@@ -21,7 +21,7 @@
  * xHCI implementation. We do our processing in lower IRQL context by launching
  * a tasklet.
  */
-void fl2000_bulk_main_completion(
+static void fl2000_bulk_main_completion(
 	struct urb *urb
 	)
 {
@@ -53,7 +53,7 @@ void fl2000_bulk_main_completion(
  * xHCI implementation. We do our processing in lower IRQL context by launching
  * a tasklet.
  */
-void fl2000_bulk_zero_length_completion(
+static void fl2000_bulk_zero_length_completion(
 	struct urb *urb
 	)
 {
