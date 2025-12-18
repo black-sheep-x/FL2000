@@ -540,7 +540,7 @@ exit:
 	return ret;
 }
 
-long
+static long
 fl2000_ioctl_test_alloc_surface(struct file *file, unsigned long arg)
 {
 	struct dev_ctx * const dev_ctx = file->private_data;
@@ -603,7 +603,7 @@ exit:
 	return ret;
 }
 
-long
+static long
 fl2000_ioctl_test_release_surface(struct file *file, unsigned long arg)
 {
 	struct test_alloc alloc_info;

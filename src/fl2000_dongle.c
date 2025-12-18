@@ -11,7 +11,7 @@
 // P R I V A T E
 /////////////////////////////////////////////////////////////////////////////////
 //
-void
+static void
 fl2000_dongle_i2c_detection_enable(struct dev_ctx * dev_ctx)
 {
 	// Enable I2C VGA Detection
@@ -20,7 +20,7 @@ fl2000_dongle_i2c_detection_enable(struct dev_ctx * dev_ctx)
 	DELAY_MS(DELAY_FOR_I2C_CONNECTION_ENABLE);
 }
 
-void
+static void
 fl2000_dongle_ext_monitor_detect_enable(struct dev_ctx * dev_ctx)
 {
 	// Enable external monitor detection.
@@ -28,7 +28,7 @@ fl2000_dongle_ext_monitor_detect_enable(struct dev_ctx * dev_ctx)
 	fl2000_reg_bit_set(dev_ctx, REG_OFFSET_8020, 28);
 }
 
-void fl2000_dongle_init_fl2000dx(struct dev_ctx * dev_ctx)
+static void fl2000_dongle_init_fl2000dx(struct dev_ctx * dev_ctx)
 {
 	// Enable interrupt for I2C detection and external monitor.
 	//
@@ -101,7 +101,7 @@ exit:
 	dbg_msg(TRACE_LEVEL_VERBOSE, DBG_PNP, "<<<<");
 }
 
-int
+static int
 fl2000_dongle_set_params(struct dev_ctx * dev_ctx, struct vr_params * vr_params)
 {
 	int ret_val;

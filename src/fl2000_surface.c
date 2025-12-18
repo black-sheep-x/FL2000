@@ -11,7 +11,7 @@
 // Simplificado para Kernel 6.17.9: Se eliminaron los IFs antiguos
 // El parámetro vmas y el flag FOLL_TOUCH ya no existen en esta API
 
-long fl2000_get_user_pages(
+static long fl2000_get_user_pages(
     unsigned long start, unsigned long nr_pages,
     struct page **pages)
 {
@@ -187,8 +187,7 @@ int fl2000_surface_map(
 		surface->mapped_buffer = vm_map_ram(
 			surface->pages,
 			surface->nr_pages,
-			-1,
-			PAGE_KERNEL);
+			-1);
 		if (surface->mapped_buffer == NULL) {
 			dbg_msg(TRACE_LEVEL_ERROR, DBG_PNP, "vm_map_ram failed?");
 			ret_val = -ENOMEM;
