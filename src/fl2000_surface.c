@@ -8,60 +8,19 @@
 #include "fl2000_include.h"
 #include <linux/version.h>
 
-/*
- * work-around get_user_pages API changes
- * for kernel version < 4.6.0
- * the function is declared as:
- * long get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
- *		    unsigned long start, unsigned long nr_pages,
- *		    int write, int force, struct page **pages,
- *		    struct vm_area_struct **vmas);
- *
- * for kernel version 4.6.0 ~ 4.8.17
- * the API changes to:
- * long get_user_pages(unsigned long start, unsigned long nr_pages,
- *			    int write, int force, struct page **pages,
- *			    struct vm_area_struct **vmas);
- *
- * for kernel version 4.9.0 ~ latest (as of 2017/08/09)
- * the API changes to:
- * long get_user_pages(unsigned long start, unsigned long nr_pages,
- *			    unsigned int gup_flags, struct page **pages,
- *			    struct vm_area_struct **vmas);
- */
+// Simplificado para Kernel 6.17.9: Se eliminaron los IFs antiguos
+// El parámetro vmas y el flag FOLL_TOUCH ya no existen en esta API
+
 long fl2000_get_user_pages(
-	unsigned long start, unsigned long nr_pages,
-	struct page **pages, struct vm_area_struct **vmas)
+    unsigned long start, unsigned long nr_pages,
+    struct page **pages)
 {
-#if LINUX_VERSION_CODE < KERNEL_VERSION(4,6,0)
 	return get_user_pages(
-		current,
-		current->mm,
-		start,
-		nr_pages,
-		0,
-		0,
-		pages,
-		vmas
-		);
-#elif LINUX_VERSION_CODE <= KERNEL_VERSION(4,8,17)
-	return get_user_pages(
-		start,
-		nr_pages,
-		0,
-		0,
-		pages,
-		vmas
-		);
-#else
-	return get_user_pages(
-		start,
-		nr_pages,
-		FOLL_GET | FOLL_TOUCH,
-		pages,
-		vmas
-		);
-#endif
+        start,
+        nr_pages,
+        FOLL_GET,
+        pages
+    );
 }
 
 int fl2000_surface_pin_down(
@@ -106,13 +65,12 @@ int fl2000_surface_pin_down(
 	case SURFACE_TYPE_VIRTUAL_FRAGMENTED_VOLATILE:
 	case SURFACE_TYPE_VIRTUAL_FRAGMENTED_PERSISTENT:
 		while (surface->pages_pinned != nr_pages) {
-			down_read(&current->mm->mmap_sem);
+			down_read(&current->mm->mmap_lock); // Cambiamos mmap_sem por mmap_lock
 			pages_pinned = fl2000_get_user_pages(
 				surface->user_buffer,
 				nr_pages,
-				pages,
-				NULL);
-			up_read(&current->mm->mmap_sem);
+				pages); // Quitamos el NULL
+			up_read(&current->mm->mmap_lock); // Cambiamos mmap_sem por mmap_lock
 			if (pages_pinned <= 0) {
 				dbg_msg(TRACE_LEVEL_ERROR, DBG_PNP,
 					"get_user_pages fails with %d\n", pages_pinned);
@@ -126,7 +84,7 @@ int fl2000_surface_pin_down(
 		break;
 
 	case SURFACE_TYPE_VIRTUAL_CONTIGUOUS:
-		down_read(&current->mm->mmap_sem);
+		down_read(&current->mm->mmap_lock); // Cambiamos mmap_sem por mmap_lock
 		/*
 		 * work-around the user memory which is mapped from driver,
 		 * but with VM_IO, VM_PFNMAP flags. This API assumes the mmaped user addr
@@ -134,14 +92,15 @@ int fl2000_surface_pin_down(
 		 */
 		vma = find_vma(current->mm, surface->user_buffer);
 		old_flags = vma->vm_flags;
-		vma->vm_flags &= ~(VM_IO | VM_PFNMAP);
+		// vma->vm_flags &= ~(VM_IO | VM_PFNMAP); <-- Reemplaza por:
+		*(unsigned long *)&vma->vm_flags &= ~(VM_IO | VM_PFNMAP);
 		pages_pinned = fl2000_get_user_pages(
 			surface->user_buffer,
 			nr_pages,
-			pages,
-			NULL);
-		vma->vm_flags = old_flags;
-		up_read(&current->mm->mmap_sem);
+			pages); // Quitamos el NULL
+		// vma->vm_flags = old_flags; <-- Reemplaza por:
+		*(unsigned long *)&vma->vm_flags = old_flags;
+		up_read(&current->mm->mmap_lock); // Cambiamos mmap_sem por mmap_lock
 		if (pages_pinned <= 0) {
 			dbg_msg(TRACE_LEVEL_ERROR, DBG_PNP,
 				"get_user_pages fails with %d\n", pages_pinned);
